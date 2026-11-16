@@ -50,6 +50,8 @@ uvicorn main:app --workers 4
 
 启动后访问 `http://localhost:8000/api/docs` 查看接口文档(路径前缀默认 `/api`,由 `APP_ROOT_PATH` 控制)。
 
+登录后的首次使用流程(同步基金字典 → 同步净值 → 录入持仓 → 生成快照)见[顶层 README 的"启动后第一步"](../README.md#启动后第一步按顺序做)。
+
 ## 常用命令
 
 ```bash

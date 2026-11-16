@@ -26,7 +26,7 @@ cp .env.example .env
 pnpm dev
 ```
 
-默认开启 MSW Mock(`VITE_APP_ENABLE_API_MOCKING=true`),可脱离后端独立跑通全部页面;对接真实后端时置为 `false`。
+默认关闭 MSW 直连真实后端(`VITE_APP_ENABLE_API_MOCKING=false`);需要脱离后端演示时改为 `true`。完整的功能介绍与"启动后第一步"指引见[顶层 README](../README.md)。
 
 ## 常用命令
 
