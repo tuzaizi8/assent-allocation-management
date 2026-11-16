@@ -1,0 +1,246 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --profit: oklch(0.577 0.245 27.325);
+  --loss: oklch(0.627 0.194 149.214);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  /* 持仓占比饼图配色:shadcn「blue」主题的 chart 色板——统一蓝、五档深浅(blue-300→blue-700)。
+     用专用变量而非全局改 --chart-1..5:两张收益率对比卡的"基准线恒灰"是刻意设计。
+     组件按切片序号循环取色(index % 5),见 positions/portfolio-share-pie.tsx */
+  --pie-1: oklch(0.809 0.105 251.813); /* blue-300 最浅 */
+  --pie-2: oklch(0.707 0.165 254.624); /* blue-400 */
+  --pie-3: oklch(0.623 0.214 259.815); /* blue-500 */
+  --pie-4: oklch(0.546 0.245 262.881); /* blue-600 */
+  --pie-5: oklch(0.424 0.199 265.638); /* blue-700 最深 */
+  /* 月度收益热力图色阶:红涨绿跌各 5 档 + 「恰好 0%」灰档 + 无数据档,共 12 个 token。
+     刻意压低 chroma(0.035→0.155):shadcn chart 原色 chroma 到 0.245,铺满整片热力图会显得又纯又艳。
+     另立 --heat-* 而非改 --chart-1..5:后者是灰阶且被其它图表消费,改它会波及全站 */
+  --heat-null: oklch(0.985 0 0); /* 无数据:近白,读作「空格子」 */
+  --heat-flat: oklch(0.955 0 0); /* 恰好 0%(灰块只代表 0%,涨跌都有颜色) */
+  --heat-loss-1: oklch(0.93 0.035 152); /* 亏 1 档(最浅) */
+  --heat-loss-2: oklch(0.878 0.065 152);
+  --heat-loss-3: oklch(0.8 0.098 152);
+  --heat-loss-4: oklch(0.7 0.128 152);
+  --heat-loss-5: oklch(0.585 0.15 152); /* 亏 5 档(最深) */
+  --heat-gain-1: oklch(0.93 0.035 25); /* 盈 1 档(最浅) */
+  --heat-gain-2: oklch(0.878 0.065 25);
+  --heat-gain-3: oklch(0.8 0.1 25);
+  --heat-gain-4: oklch(0.7 0.13 25);
+  --heat-gain-5: oklch(0.585 0.152 25); /* 盈 5 档(最深) */
+  /* 原 0.985 与内容区/卡片(纯白)几乎同色,三层糊成一片;压到 0.968 后:侧边栏↔内容区差 0.020、
+     内容区↔卡片差 0.012,三层拉开。inset 变体的外圈留白(has-data-[variant=inset]:bg-sidebar)
+     也跟着变灰,主面板的浮起感更强 */
+  --sidebar: oklch(0.968 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  /* 选中态与 hover 共用本变量。跟着侧边栏一起压暗:底色调到 0.968 后若沿用 0.945 只剩 0.023
+     差值,选中又不明显了;取 0.935 恢复约 0.033 的差值——能一眼分辨选中项,又不盖过 primary 主色 */
+  --sidebar-accent: oklch(0.935 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  /* 内容区(侧边栏右侧主面板)底色:卡片是纯白 --card(1 0 0)、原底色也是纯白,同色所以平。
+     取值卡在两条边界之间:> 侧边栏 0.968(比侧边栏亮,两者不糊在一起)、< 卡片 1.0(白卡片浮得出来)。
+     侧边栏压到 0.968 后窗口张开了,取 0.996:与侧边栏差 0.028(最亮的一档),与卡片仅差 0.004。
+     色度保持 0(中性灰):加暖色度会明显泛黄,这里只靠亮度差分层。
+     要加深/变浅只调这个变量,不要去改卡片自身。 */
+  --content-bg: oklch(0.996 0 0);
+  /* 侧边栏顶部模块切换器(TabsList)的底色:官方默认吃 --muted(0.97),而侧边栏已压到 0.968,
+     两者只差 0.002、视觉上完全融成一片,故单开一个比侧边栏再深一档的变量。
+     深色同理:侧边栏 0.205、--muted 0.269 虽已有差距,仍统一走本变量便于调 */
+  --sidebar-tab-bg: oklch(0.935 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --profit: oklch(0.704 0.191 22.216);
+  --loss: oklch(0.723 0.19 149.579);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  /* 饼图配色:暗色底整体上移一档(blue-200→blue-600),避免最深档糊进深色背景 */
+  --pie-1: oklch(0.882 0.059 254.128); /* blue-200 最浅 */
+  --pie-2: oklch(0.809 0.105 251.813); /* blue-300 */
+  --pie-3: oklch(0.707 0.165 254.624); /* blue-400 */
+  --pie-4: oklch(0.623 0.214 259.815); /* blue-500 */
+  --pie-5: oklch(0.546 0.245 262.881); /* blue-600 最深 */
+  /* 热力图色阶:暗底上「越深越强」读不出来,故方向反转——档位越极端越亮(与暗色下 --profit/--loss 已提亮同理)。
+     变量名语义不变(loss-1 恒为最浅档、loss-5 恒为最强档),组件侧 range 数组因此不用分主题 */
+  --heat-null: oklch(0.235 0 0); /* 无数据:几乎贴卡片底色 */
+  --heat-flat: oklch(0.3 0 0); /* 持平 ±0.5% */
+  --heat-loss-1: oklch(0.36 0.04 152);
+  --heat-loss-2: oklch(0.44 0.07 152);
+  --heat-loss-3: oklch(0.54 0.105 152);
+  --heat-loss-4: oklch(0.65 0.135 152);
+  --heat-loss-5: oklch(0.76 0.155 152);
+  --heat-gain-1: oklch(0.36 0.04 25);
+  --heat-gain-2: oklch(0.44 0.075 25);
+  --heat-gain-3: oklch(0.54 0.11 25);
+  --heat-gain-4: oklch(0.65 0.14 25);
+  --heat-gain-5: oklch(0.76 0.158 25);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  /* 深色下靠提亮而非压暗拉开对比:原 0.269 与侧边栏底 0.205 只差 0.064 */
+  --sidebar-accent: oklch(0.32 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  /* 深色没有"更亮"这回事:取在背景 0.145 与卡片/侧边栏 0.205 之间,比背景略抬一档即可 */
+  --content-bg: oklch(0.185 0 0);
+  --sidebar-tab-bg: oklch(0.3 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+.theme {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-profit: var(--profit);
+  --color-loss: var(--loss);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ===== 不确定进度条(交易导入处理中):轨道内一段循环滑过的指示条 =====
+   进度不可知——后端在同一个请求里做完「写入记录 + 重建快照」,前端看不到分界;
+   指标只在"做没做完",所以只给"进行中"的信号,不假装百分比 */
+@theme {
+  --animate-indeterminate: indeterminate 1.4s ease-in-out infinite;
+
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(300%);
+    }
+  }
+}
+
+@plugin '@tailwindcss/typography';
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@layer components {
+  /* ===== 字典标签(07-字典对接 cssClass 契约)===== */
+  .tag-primary {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary;
+  }
+  .tag-success {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400;
+  }
+  .tag-danger {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-destructive/10 text-destructive;
+  }
+  .tag-warning {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400;
+  }
+  .tag-info {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-sky-500/10 text-sky-600 dark:text-sky-400;
+  }
+  .tag-default {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-muted-foreground;
+  }
+}

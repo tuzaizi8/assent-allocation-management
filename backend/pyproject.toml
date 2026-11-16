@@ -1,0 +1,58 @@
+[project]
+name = "assent-allocation-management"
+version = "0.1.0"
+description = "资产管理"
+requires-python = ">=3.11"
+dependencies = [
+    # Web 框架
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    # ORM
+    "sqlalchemy[asyncio]>=2.0.0",
+    "asyncpg>=0.29.0",
+    # 配置
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+    "python-dotenv>=1.0.0",
+    # 日志
+    "loguru>=0.7.0",
+    # 安全
+    "bcrypt>=4.1.0",
+    "PyJWT>=2.8.0",
+    # 工具
+    "python-multipart>=0.0.9",
+    # Redis
+    "redis >=5.0",
+    # 业务外部依赖
+    "akshare>=1.10.0",    # 基金/指数行情数据源(同步库,调用需 asyncio.to_thread 包裹)
+    "openpyxl>=3.0.0",    # 持仓 Excel 导入导出
+    # 交易明细多格式导入(PDF/截图)
+    "pdfplumber>=0.11.0",  # PDF 文本层与表格抽取(自带 pypdfium2 位图渲染)
+    "Pillow>=10.0.0",      # 图片解码与 PDF 页位图(statement_readers/statement_ocr 直接 import PIL,不能只靠传递依赖)
+    "numpy>=1.26.0",       # OCR 前的图像转数组(statement_ocr 直接 import numpy)
+    "quantstats>=0.0.80",  # 持仓风险指标(波动率/夏普/回撤等,连带 scipy/matplotlib/seaborn/yfinance)
+    "rapidocr>=3.4.0",     # 截图与扫描版 PDF 的 OCR 兜底(纯 ONNX,无需 GPU)
+    "onnxruntime>=1.20.0", # rapidocr 推理后端
+    "pyyaml>=6.0.0",       # 平台适配配置(项目根目录 *.yaml)
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0,<0.16",  # 0.16 起默认规则集扩大(DTZ/TRY/BLE 等),与脚手架基线不符
+    "httpx2>=2.0.0",       # ← 替换 httpx，starlette 1.3+ 推荐
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "config*", "core*", "common*", "middlewares*", "db*", "utils*", "module_system*", "module_fund*", "module_portfolio*", "module_asset*", "tests*"]
+exclude = ["logs*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

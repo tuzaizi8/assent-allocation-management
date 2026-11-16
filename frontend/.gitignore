@@ -1,0 +1,61 @@
+# Logs(仅忽略仓库根的 logs 目录;裸 logs 会误伤 src/features/logs 业务目录)
+/logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build
+dist
+dist-ssr
+*.local
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.idea
+.vscode
+.qoder
+.trae
+.codebuddy
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+
+# Testing
+coverage
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Mock server runtime
+mocked-db.json
+
+# Playwright auth state (临时文件,测试时生成)
+e2e/.auth/user.json
+
+# Misc
+.tsbuildinfo
+
+# AOCI 本地认知资产(与后端同一先例:索引只留本地,不入版本控制)
+/aoci.txt
+/aoci.*.txt
+/.aoci/
+AGENTS.md.backup.*
+
+# MCP server 本地注册(命令含本机绝对路径,不跨机器通用)
+.mcp.json

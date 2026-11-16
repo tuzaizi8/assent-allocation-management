@@ -1,0 +1,18 @@
+# ===== 全局 =====
+.DS_Store
+*.local
+Thumbs.db
+
+# ===== 环境变量(各子目录另有自己的 .gitignore)=====
+.env
+.env.*
+!.env.example
+
+# ===== 依赖与构建(兜底,正常由子目录 .gitignore 覆盖)=====
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.egg-info/
+dist/
+logs/

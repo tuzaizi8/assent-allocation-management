@@ -1,0 +1,28 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>资产管理</title>
+    <script>
+      // FOUC 防护：React 挂载前预设主题（同步执行，避免闪烁）
+      // 必须与 theme-store.ts 的 name: 'app-theme' 和字段 theme 对齐
+      (function () {
+        try {
+          var stored = localStorage.getItem('app-theme');
+          var theme = stored ? JSON.parse(stored).state.theme : 'light';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          // localStorage 不可用或 JSON 解析失败，忽略（用默认亮色）
+        }
+      })();
+    </script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

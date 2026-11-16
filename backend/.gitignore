@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 环境配置
+.env
+.env.dev
+.env.prod
+
+# 日志
+logs/
+*.log
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 构建
+build/
+dist/
+*.egg-info/
+
+# 系统与工具
+.DS_Store
+.codebuddy/
+.trae/
+
+# AOCI 认知层(本地资产,不进版本控制)
+aoci.txt
+aoci.meta.txt
+aoci.code.txt
+aoci.database.txt
+.aoci/
+AGENTS.md.backup.*
+.gitattributes
