@@ -9,10 +9,10 @@ Thumbs.db
 !.env.example
 
 # ===== 依赖与构建(兜底,正常由子目录 .gitignore 覆盖)=====
+# 注意:不写 logs/ 这类宽泛规则,否则会误杀 frontend/src/features/logs 源码目录
 node_modules/
 .venv/
 venv/
 __pycache__/
 *.egg-info/
 dist/
-logs/
