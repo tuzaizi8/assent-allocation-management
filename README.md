@@ -1,16 +1,11 @@
 # Assent Allocation Management
 
-基金资产管理与组合分析系统（全栈 Monorepo）——记录你买了哪些基金、花了多少钱、现在值多少钱，并告诉你「实际配置」离「目标配置」差多少。
+基金资产管理与组合分析系统（全栈 Monorepo）——记录你买了哪些基金、花了多少钱、现在值多少钱、赚了多少。
 
 ![CI](https://github.com/tuzaizi8/assent-allocation-management/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-<!-- 📸 图片占位：主界面截图。建议放仪表盘页（/app），文件路径 docs/images/dashboard.png，宽 1200px 左右 -->
-
 ![仪表盘预览](docs/images/dashboard.png)
-
-> [!NOTE]
-> 上方图片为占位，待作者补充真实界面截图后生效。
 
 ## 功能一览
 
@@ -40,6 +35,26 @@
 - 权限三分法：管理数据走按钮权限、公共行情数据仅登录 + 限流、持仓私域数据行级隔离
 - JWT 认证 + 角色菜单动态路由
 
+## 界面预览
+
+### 持仓简况
+
+总市值、昨日收益、今日收益、持有收益、累计盈亏一目了然；持仓明细表支持按持有收益率排序，持仓占比环形图展示每只基金的市值权重。
+
+![持仓简况](docs/images/positions-summary.png)
+
+### 持仓分析
+
+以 QuantStats 为内核的组合风险画像：年化收益率走势（组合 vs 基准）、最大回撤与修复过程、回撤曲线、索提诺比率、信息比率、胜率、β 与跟踪误差等指标卡。全部指标基于真实净值与 TWR 计算，数据不采样、不估算，每一笔都能在净值历史里溯源。
+
+![持仓分析](docs/images/analysis.png)
+
+### 交易明细导入
+
+上传券商导出的 Excel / PDF / 截图对账单后，系统自动解析为结构化交易记录并进入三步确认流程（选择文件 → 核对勾选 → 完成导入），按来源文件逐行列出类型、金额、份额、单价与手续费，人工确认后自动重建持仓与快照。
+
+![交易导入](docs/images/import-transactions.png)
+
 ## 架构
 
 ```mermaid
@@ -52,19 +67,15 @@ flowchart LR
     subgraph BACKEND["backend/ — FastAPI"]
         F["module_fund<br/>基金是什么(字典+行情)"]
         P["module_portfolio<br/>我做了什么(交易+持仓+分析)"]
-        A["module_asset<br/>我想要什么(目标配置)"]
     end
 
     UI --> Q -->|REST /api| BACKEND
-    A -->|查基金市值| F
-    A -->|查持仓占比| P
     P -->|查净值| F
     F -->|AkShare| EXT[(外部数据源)]
 ```
 
 - `module_fund`：基金字典、净值历史（JSONB）、指数行情、AkShare 三级缓存编排（Redis → DB → 外部源）
 - `module_portfolio`：持仓/买卖流水/每日快照预计算/现金流，TWR、MWR、Modified Dietz、QuantStats 风险指标
-- `module_asset`：资产类别、配置模式与目标占比、基金→类别映射、实际 vs 目标配置对比（界面待建设，接口已就绪）
 
 ## 技术栈
 
@@ -187,7 +198,6 @@ pnpm dev
 │   ├── app/                     # 应用工厂与生命周期(启动自动初始化种子)
 │   ├── module_fund/             # 基金字典/净值/图表/指数
 │   ├── module_portfolio/        # 持仓/交易/快照/分析/导入导出
-│   ├── module_asset/            # 资产类别/配置模式/映射/对比
 │   ├── module_system/           # 认证/菜单/用户/角色/字典/日志
 │   └── db/init_data.py          # 种子数据(管理员/菜单/角色/字典)
 └── .github/workflows/ci.yml     # Monorepo 门禁 CI
