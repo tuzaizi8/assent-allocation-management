@@ -142,12 +142,12 @@ pnpm dev
 
 1. **登录**
    使用种子管理员：`admin@assent.local` / `password123`（仅限本地联调，真实部署后必须立即修改）。
-   <!-- 📸 图片占位：登录页截图 docs/images/login.png -->
+
    ![登录页](docs/images/login.png)
 
 2. **同步基金字典**
    侧边栏切到「资产」页签 → 基金管理 → 点击「同步基金」。从 AkShare 全量拉取基金基础信息（代码/名称/类型/公司），该操作限流 2 次/小时，首次约 1~2 分钟。
-   <!-- 📸 图片占位：基金管理页同步按钮 docs/images/fund-sync.png -->
+
    ![基金管理](docs/images/fund-sync.png)
 
 3. **同步基金净值**
