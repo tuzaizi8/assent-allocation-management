@@ -1,8 +1,8 @@
-# Assent Allocation Management
+# Asset Allocation Management
 
 基金资产管理与组合分析系统（全栈 Monorepo）——记录你买了哪些基金、花了多少钱、现在值多少钱、赚了多少。
 
-![CI](https://github.com/tuzaizi8/assent-allocation-management/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/tuzaizi8/asset-allocation-management/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ![仪表盘预览](docs/images/dashboard.png)
@@ -109,7 +109,7 @@ cp .env.example .env.dev
 
 | 字段 | 说明 |
 |---|---|
-| `DB_HOST` / `DB_PORT` / `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` | PostgreSQL 连接（需先手动建库 `CREATE DATABASE assent_allocation_management;`） |
+| `DB_HOST` / `DB_PORT` / `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` | PostgreSQL 连接（需先手动建库 `CREATE DATABASE asset_allocation_management;`） |
 | `REDIS_HOST` / `REDIS_PORT` | Redis 连接 |
 | `JWT_SECRET_KEY` | 必填，`openssl rand -base64 32` 生成 |
 
